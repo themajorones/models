@@ -39,6 +39,6 @@ public class GitHubUser {
     private GitHubAuthentication accessToken;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "refresh_token", nullable = false)
+    @JoinColumn(name = "refresh_token", nullable = true)
     private GitHubAuthentication refreshToken;
 }

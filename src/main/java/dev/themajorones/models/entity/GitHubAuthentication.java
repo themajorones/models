@@ -29,6 +29,6 @@ public class GitHubAuthentication {
     @Column(nullable = false, length = 2048)
     private String content;
     
-    @Column(nullable = false)
+    @Column
     private Long expireAt;
 }
