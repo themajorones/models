@@ -10,16 +10,20 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Data
 @Entity
-@Table(name = "[user]")
-public class User {
+@Accessors(chain = true)
+@NoArgsConstructor
+@Table(name = "github_user")
+public class GitHubUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
+
     @Column(nullable = false, unique = true, length = 255)
     private String githubId;
     
@@ -32,9 +36,9 @@ public class User {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "access_token", nullable = false)
-    private Authentication accessToken;
+    private GitHubAuthentication accessToken;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "refresh_token", nullable = false)
-    private Authentication refreshToken;
+    private GitHubAuthentication refreshToken;
 }
