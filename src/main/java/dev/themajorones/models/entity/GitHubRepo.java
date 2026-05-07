@@ -1,5 +1,6 @@
 package dev.themajorones.models.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -16,18 +17,26 @@ import lombok.experimental.Accessors;
 @Entity
 @Accessors(chain = true)
 @NoArgsConstructor
-@Table(name = "user_organization")
-public class UserOrganization {
+@Table(name = "github_repo")
+public class GitHubRepo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private GitHubUser user;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
-    private Organization organization;
+
+    @Column(nullable = false, unique = true)
+    private Long githubId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private GitHubOwner owner;
+
+    @Column(nullable = false, length = 255)
+    private String name;
+
+    @Column(nullable = false, unique = true, length = 255)
+    private String fullName;
+
+    @Column(name = "private_repo", nullable = false)
+    private boolean privateRepo;
 }

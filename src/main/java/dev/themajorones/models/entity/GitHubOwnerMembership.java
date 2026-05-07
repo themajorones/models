@@ -7,8 +7,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -17,28 +18,26 @@ import lombok.experimental.Accessors;
 @Entity
 @Accessors(chain = true)
 @NoArgsConstructor
-@Table(name = "github_user")
-public class GitHubUser {
+@Table(
+    name = "github_owner_membership",
+    uniqueConstraints = @UniqueConstraint(
+        name = "uk_github_owner_membership_user_owner",
+        columnNames = {"user_id", "owner_id"}
+    )
+)
+public class GitHubOwnerMembership {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "owner_id", nullable = false, unique = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private GitHubUser user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private GitHubOwner owner;
-
-    @Column(nullable = false, length = 4096)
-    private String accessToken;
-
-    @Column
-    private Long accessTokenExpiresAt;
-
-    @Column(length = 4096)
-    private String refreshToken;
-
-    @Column
-    private Long refreshTokenExpiresAt;
 
     @Column(nullable = false)
     private Long syncedAt;
