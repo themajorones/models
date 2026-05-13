@@ -7,9 +7,9 @@ public interface TaskLogConstant {
     }
 
     public static interface Status {
-        String PENDING = "pending";
-        String SUCCESS = "success";
-        String FAILED = "failed";
+        String PENDING = "Pending";
+        String SUCCESS = "Success";
+        String FAILED = "Failed";
     }
     
 }

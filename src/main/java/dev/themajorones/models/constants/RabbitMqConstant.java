@@ -1,35 +1,13 @@
 package dev.themajorones.models.constants;
 
-public final class RabbitMqConstant {
+public interface RabbitMqConstant {
 
     public static final String DIRECT_EXCHANGE = "amq.direct";
 
-    private RabbitMqConstant() {
-    }
-
-    public static final class Queue {
-
-        public static final class Message {
-            public static final String NAME = "autotest.messages";
-
-            private Message() {
-            }
-        }
-
-        private Queue() {
-        }
-    }
-
-    public static final class RoutingKey {
-
-        public static final class Message {
-            public static final String NAME = "autotest.message";
-
-            private Message() {
-            }
-        }
-
-        private RoutingKey() {
+    public interface Queue {
+        public interface Test {
+            public static final String NAME = "test";
+            public static final String ROUTING_KEY = "test_key";
         }
     }
 }
