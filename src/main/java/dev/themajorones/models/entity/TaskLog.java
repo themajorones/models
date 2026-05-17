@@ -5,8 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Lob;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,16 +30,37 @@ public class TaskLog {
     @Column(nullable = false)
     private String status;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, columnDefinition = "nvarchar(max)")
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "triggered_by_id")
-    private GitHubUser triggeredBy;
+    @Lob
+    @Column(columnDefinition = "nvarchar(max)")
+    private String result;
+
+    @Column
+    private Long startedAt;
+
+    @Column
+    private Long endedAt;
 
     @Column(nullable = false)
     private Long createdAt;
 
     @Column(nullable = false)
     private Long updatedAt;
+
+    @PrePersist
+    public void onCreate() {
+        long now = System.currentTimeMillis();
+        if (createdAt == null) {
+            createdAt = now;
+        }
+        updatedAt = now;
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        updatedAt = System.currentTimeMillis();
+    }
 }
