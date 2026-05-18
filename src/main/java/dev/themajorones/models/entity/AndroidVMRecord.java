@@ -38,16 +38,16 @@ public class AndroidVMRecord {
     @Column(nullable = false, length = 512)
     private String image;
 
-    @Column(length = 128)
+    @Column(length = 128, nullable = true)
     private String containerId;
 
-    @Column(length = 255)
+    @Column(length = 255, nullable = true)
     private String containerName;
 
-    @Column(length = 255)
+    @Column(length = 255, nullable = true)
     private String adbHost;
 
-    @Column
+    @Column(nullable = true)
     private Integer adbPort;
 
     @Column(nullable = false, length = 64)
