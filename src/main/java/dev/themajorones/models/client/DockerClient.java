@@ -16,6 +16,9 @@ import org.springframework.web.client.RestClient;
 
 import dev.themajorones.models.dto.CreateAndroidVMRequest;
 import dev.themajorones.models.dto.DockerCapability;
+import dev.themajorones.models.entity.AndroidVM;
+import dev.themajorones.models.entity.RetroidAndroidVM;
+import dev.themajorones.models.entity.RetroidAndroidVMDetails;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
@@ -82,16 +85,20 @@ public class DockerClient {
             .body(String.class);
     }
 
-    public String createAndroidContainer(String baseUrl, Integer androidVMId, CreateAndroidVMRequest vmRequest) {
+    public String createAndroidContainer(String baseUrl, Integer androidVMId, AndroidVM vm) {
+        if (!(vm instanceof RetroidAndroidVM retroid)) {
+            throw new IllegalArgumentException("Unsupported Android VM type: " + vm.getVmType());
+        }
         String containerName = "tmos-android-vm-" + androidVMId;
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("Image", requireText(vmRequest.getImage(), "Android VM image"));
+        body.put("Image", requireText(retroid.getImage(), "Android VM image"));
         body.put("Labels", Map.of(
             "tmos.managed", "true",
+            "tmos.androidVmType", requireText(retroid.getVmType(), "Android VM type"),
             "tmos.androidVMId", String.valueOf(androidVMId)
         ));
         body.put("ExposedPorts", Map.of(ADB_PORT, Map.of()));
-        body.put("Env", redroidEnvironment(vmRequest));
+        body.put("Env", retroidEnvironment(retroid));
         body.put("HostConfig", Map.of(
             "Privileged", true,
             "PortBindings", Map.of(ADB_PORT, List.of(Map.of("HostIp", "0.0.0.0", "HostPort", "")))
@@ -200,18 +207,19 @@ public class DockerClient {
             .build();
     }
 
-    private List<String> redroidEnvironment(CreateAndroidVMRequest vmRequest) {
+    private List<String> retroidEnvironment(RetroidAndroidVM vmRequest) {
         List<String> env = new ArrayList<>();
-        if (vmRequest.getWidth() != null) {
-            env.add("ro.redroid.width=" + vmRequest.getWidth());
+        RetroidAndroidVMDetails details = vmRequest.getDetails();
+        if (details.getWidth() != null) {
+            env.add("ro.redroid.width=" + details.getWidth());
         }
-        if (vmRequest.getHeight() != null) {
-            env.add("ro.redroid.height=" + vmRequest.getHeight());
+        if (details.getHeight() != null) {
+            env.add("ro.redroid.height=" + details.getHeight());
         }
-        if (vmRequest.getDpi() != null) {
-            env.add("ro.redroid.dpi=" + vmRequest.getDpi());
+        if (details.getDpi() != null) {
+            env.add("ro.redroid.dpi=" + details.getDpi());
         }
-        String mode = vmRequest.getAccelerationMode() == null ? CreateAndroidVMRequest.DEFAULT_ACCELERATION_MODE : vmRequest.getAccelerationMode();
+        String mode = details.getAccelerationMode() == null ? CreateAndroidVMRequest.DEFAULT_ACCELERATION_MODE : details.getAccelerationMode();
         env.add("androidboot.redroid_gpu_mode=" + switch (mode.toUpperCase()) {
             case "HOST" -> "host";
             case "AUTO" -> "auto";

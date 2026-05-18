@@ -1,6 +1,7 @@
 package dev.themajorones.models.dto;
 
-import dev.themajorones.models.entity.AndroidVM;
+import java.util.Map;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -10,6 +11,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AndroidVMDetail {
 
-    private AndroidVM androidVM;
+    private Map<String, Object> androidVM;
     private String dockerInspectJson;
 }

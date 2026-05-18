@@ -1,54 +1,42 @@
 package dev.themajorones.models.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+public interface AndroidVM {
 
-@Data
-@Entity
-@Accessors(chain = true)
-@NoArgsConstructor
-@Table(name = "android_vm")
-public class AndroidVM {
+    Integer getId();
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    AndroidVM setId(Integer id);
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "docker_id", nullable = false)
-    private Docker docker;
+    Docker getDocker();
 
-    @Column(nullable = false, length = 255)
-    private String name;
+    AndroidVM setDocker(Docker docker);
 
-    @Column(nullable = false, length = 512)
-    private String image;
+    String getName();
 
-    @Column(length = 128)
-    private String containerId;
+    AndroidVM setName(String name);
 
-    @Column(length = 255)
-    private String containerName;
+    String getImage();
 
-    @Column(length = 255)
-    private String adbHost;
+    AndroidVM setImage(String image);
 
-    @Column
-    private Integer adbPort;
+    String getContainerId();
 
-    @Column(nullable = false, length = 32)
-    private String accelerationMode;
+    AndroidVM setContainerId(String containerId);
 
-    @Column(nullable = false, length = 64)
-    private String status;
+    String getContainerName();
+
+    AndroidVM setContainerName(String containerName);
+
+    String getAdbHost();
+
+    AndroidVM setAdbHost(String adbHost);
+
+    Integer getAdbPort();
+
+    AndroidVM setAdbPort(Integer adbPort);
+
+    String getStatus();
+
+    AndroidVM setStatus(String status);
+
+    String getVmType();
 }
